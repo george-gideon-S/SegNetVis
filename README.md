@@ -6,7 +6,7 @@
 
 Machine learning models like [Tile2Net](https://github.com/VIDA-NYU/tile2net) can automatically extract pedestrian networks (sidewalks, crosswalks, roads) from satellite imagery. However, understanding *why* these models fail and *where* they need improvement requires more than aggregate accuracy metrics. SegNetVis provides an interactive visual analytics environment where urban planners, ML researchers, and infrastructure analysts can deeply investigate model outputs, trace errors from pixels to network topology, and systematically validate extracted infrastructure.
 
-![Segmentation Detective](data\sample\output_screenshots\output_screenshot2.png)
+![Segmentation Detective](https://github.com/george-gideon-S/SegNetVis/blob/main/data/sample/output_screenshots/output_screenshot1.png)
 ![Network Quality Inspector](data\sample\output_screenshots\output_screenshot1.png)
 
 ## The Problem: Pixel-Topology Gap
