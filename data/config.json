@@ -1,0 +1,26 @@
+{
+  "extent": {
+    "center": [40.7484, -73.9857],
+    "zoom": 16,
+    "bounds": [[40.745, -73.990], [40.751, -73.981]]
+  },
+  "network": "data/sample/pedestrian-network.geojson",
+  "osmNetwork": "data/sample/osm-network.geojson",
+  "errors": "data/sample/errors.geojson",
+  "citySidewalks": "data/sample/city-sidewalks-sample.geojson",
+  "cityBuildings": "data/sample/city-buildings-sample.geojson",
+  "segmentation": {
+    "tilesDirectory": "data/tiles",
+    "predictionsDirectory": "data/tiles/predictions",
+    "groundTruthDirectory": "data/tiles/ground_truth",
+    "tileSize": 256,
+    "tileFormat": "png",
+    "tileIndexFile": "data/tiles/tile_index.json"
+  },
+  "tile2net": {
+    "projectDirectory": "data/tile2net_output",
+    "segmentationMasks": "data/tile2net_output/masks",
+    "polygons": "data/tile2net_output/polygons.geojson",
+    "network": "data/tile2net_output/network.geojson"
+  }
+}

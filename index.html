@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Pedestrian Network Diagnostic System">
+    <title>Pedestrian Network Inspector | AI Diagnostics</title>
+
+    <!-- Modern Design System -->
+    <link rel="stylesheet" href="css/modern-design-system.css">
+    <link rel="stylesheet" href="css/modern-main.css">
+    <link rel="stylesheet" href="css/magnification-lens.css">
+
+    <!-- Mapbox GL JS -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+
+    <!-- Deck.gl -->
+    <script src="https://unpkg.com/deck.gl@^8.9.0/dist.min.js"></script>
+
+    <!-- D3.js for data processing -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <!-- Skip Links -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- App Container - Scrollable -->
+    <div id="app" class="app-container-scrollable">
+
+        <!-- ============================================ -->
+        <!-- IDEA A: SEGMENTATION DETECTIVE (Full Screen) -->
+        <!-- ============================================ -->
+        <section id="idea-a-section" class="idea-section idea-a-section">
+
+            <!-- Compact Header -->
+            <header class="section-header glass-panel">
+                <div class="header-content">
+                    <div class="brand">
+                        <div class="brand-icon">
+                            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                                <circle cx="16" cy="16" r="14" stroke="url(#gradient1)" stroke-width="2"/>
+                                <path d="M12 16L16 20L20 12" stroke="url(#gradient1)" stroke-width="2" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#8b5cf6"/>
+                                        <stop offset="100%" style="stop-color:#ec4899"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="brand-text">
+                            <h1 class="brand-title">Segmentation Detective</h1>
+                            <p class="brand-subtitle">Pixel-Level Error Analysis</p>
+                        </div>
+                    </div>
+
+                    <!-- Controls inline with header -->
+                    <div class="header-controls">
+                        <!-- Display Mode - Extended with Original and Confidence -->
+                        <div class="seg-mode-toggle">
+                            <button class="seg-mode-btn" data-mode="original" title="Show original imagery only">
+                                Original
+                            </button>
+                            <button class="seg-mode-btn active" data-mode="prediction" title="Show model predictions">
+                                Prediction
+                            </button>
+                            <button class="seg-mode-btn" data-mode="groundTruth" title="Show ground truth">
+                                Ground Truth
+                            </button>
+                            <button class="seg-mode-btn" data-mode="error" title="Show errors (FP/FN)">
+                                Errors
+                            </button>
+                            <button class="seg-mode-btn" data-mode="confidence" title="Show confidence heatmap">
+                                Confidence
+                            </button>
+                        </div>
+
+                        <!-- Opacity -->
+                        <div class="opacity-control">
+                            <label>Opacity</label>
+                            <input type="range" id="seg-opacity" class="range-slider-small" min="0" max="100" value="70">
+                        </div>
+
+                        <!-- Magnification Lens Toggle -->
+                        <button class="lens-toggle-btn" id="lens-toggle" title="Toggle Layer Inspector (L)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <span>Lens</span>
+                        </button>
+
+                        <!-- Scroll indicator -->
+                        <div class="scroll-hint">
+                            <span>Network Inspector</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M7 13l5 5 5-5M7 6l5 5 5-5" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dual Map Container - Full Height -->
+            <main id="main-content" class="dual-map-container">
+
+                <!-- LEFT MAP: Segmentation -->
+                <div class="map-panel" id="seg-map-panel">
+                    <div class="map-panel-label">Semantic Segmentation</div>
+                    <div id="segmentation-map" class="map-container-full"></div>
+
+                    <!-- Class Legend - Dark background for contrast on street map -->
+                    <div class="map-legend legend-dark">
+                        <div class="legend-title">Classes</div>
+                        <div class="legend-items-horizontal">
+                            <div class="legend-item class-toggle active" data-class="road">
+                                <div class="legend-color" style="background: #4caf50;"></div>
+                                <span>Road</span>
+                            </div>
+                            <div class="legend-item class-toggle active" data-class="sidewalk">
+                                <div class="legend-color" style="background: #2196f3;"></div>
+                                <span>Sidewalk</span>
+                            </div>
+                            <div class="legend-item class-toggle active" data-class="crosswalk">
+                                <div class="legend-color" style="background: #f44336;"></div>
+                                <span>Crosswalk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT MAP: Error/Confusion -->
+                <div class="map-panel" id="error-map-panel">
+                    <div class="map-panel-label">Error Analysis (FP/FN/TP)</div>
+                    <div id="error-map" class="map-container-full"></div>
+
+                    <!-- Error Legend -->
+                    <div class="map-legend glass-panel-elevated">
+                        <div class="legend-title">Error Types</div>
+                        <div class="legend-items-horizontal">
+                            <div class="legend-item">
+                                <div class="legend-color legend-fp"></div>
+                                <span>False Positive</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-fn"></div>
+                                <span>False Negative</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #2dd4bf;"></div>
+                                <span>True Positive</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Stats Bar at Bottom -->
+            <div class="stats-bar glass-panel">
+                <div class="stat-item">
+                    <span class="stat-label">Accuracy</span>
+                    <span class="stat-value" id="stat-accuracy">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Precision</span>
+                    <span class="stat-value" id="stat-precision">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Recall</span>
+                    <span class="stat-value" id="stat-recall">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">F1 Score</span>
+                    <span class="stat-value" id="stat-f1">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Mean IoU</span>
+                    <span class="stat-value" id="stat-iou">--</span>
+                </div>
+                <div class="stat-item stat-action">
+                    <button class="btn-modern btn-small" id="show-confusion-matrix" title="Show Confusion Matrix (M)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                        </svg>
+                        Matrix
+                    </button>
+                </div>
+                <div class="stat-item stat-hint">
+                    <span class="keyboard-hint">Press <kbd>H</kbd> for shortcuts</span>
+                </div>
+            </div>
+
+            <!-- Advanced Filter Panel (collapsible) - MUST BE VISIBLE IN IDEA A -->
+            <div class="filter-panel glass-panel" id="filter-panel" style="display: block; opacity: 1; visibility: visible;">
+                <button class="filter-toggle" id="filter-toggle">
+                    <span>Advanced Filters</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="toggle-icon">
+                        <path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <div class="filter-content" id="filter-content" style="display: none;">
+                    <!-- Error Type Filters -->
+                    <div class="filter-group">
+                        <span class="filter-group-label">Error Types</span>
+                        <div class="filter-checkboxes">
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-tp" checked>
+                                <span class="checkbox-custom tp"></span>
+                                <span>True Positive</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-fp" checked>
+                                <span class="checkbox-custom fp"></span>
+                                <span>False Positive</span>
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filter-fn" checked>
+                                <span class="checkbox-custom fn"></span>
+                                <span>False Negative</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Range Filter -->
+                    <div class="filter-group">
+                        <span class="filter-group-label">Confidence Range</span>
+                        <div class="confidence-range">
+                            <input type="range" id="conf-min" class="range-slider-small" min="0" max="100" value="0">
+                            <span id="conf-min-label">0%</span>
+                            <span>to</span>
+                            <input type="range" id="conf-max" class="range-slider-small" min="0" max="100" value="100">
+                            <span id="conf-max-label">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Reset Filters Button -->
+                    <button class="btn-modern btn-small" id="reset-filters">
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ============================================ -->
+        <!-- IDEA B: NETWORK QUALITY INSPECTOR (Below) -->
+        <!-- ============================================ -->
+        <section id="idea-b-section" class="idea-section idea-b-section">
+
+            <!-- Section Header -->
+            <header class="section-header glass-panel">
+                <div class="header-content">
+                    <div class="brand">
+                        <div class="brand-icon" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 12l10 5 10-5"/>
+                                <path d="M2 17l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <div class="brand-text">
+                            <h1 class="brand-title" style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); -webkit-background-clip: text; background-clip: text;">Network Quality Inspector</h1>
+                            <p class="brand-subtitle">Graph-Level Topology Analysis</p>
+                        </div>
+                    </div>
+
+                    <div class="header-controls">
+                        <!-- Back to Idea A button -->
+                        <button class="scroll-hint scroll-up" id="scroll-to-idea-a" title="Back to Segmentation Detective">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M7 11l5-5 5 5M7 18l5-5 5 5" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Segmentation Detective</span>
+                        </button>
+
+                        <!-- Comparison Mode -->
+                        <div class="view-mode-toggle">
+                            <button class="mode-btn active" data-mode="network-only" title="Show Tile2Net network only">
+                                Network
+                            </button>
+                            <button class="mode-btn" data-mode="overlay" title="Compare with OSM">
+                                OSM Overlay
+                            </button>
+                            <button class="mode-btn" data-mode="city-data" title="Compare with City GIS data">
+                                City Data
+                            </button>
+                        </div>
+
+                        <!-- Flicker Toggle -->
+                        <button class="flicker-toggle-btn active" id="flicker-toggle" title="Toggle flicker comparison (F)">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                            <span>Flicker</span>
+                        </button>
+
+                        <!-- 3D Toggle -->
+                        <button class="btn-modern" id="btn-3d" title="Toggle 3D view">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke-width="2"/>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2"/>
+                            </svg>
+                            <span>3D</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Network Map - Full Width -->
+            <div class="network-map-container">
+                <div id="network-map" class="map-container-full"></div>
+
+                <!-- Quality Legend -->
+                <div class="map-legend glass-panel-elevated" id="network-legend">
+                    <div class="legend-title">Quality Scale</div>
+                    <div class="quality-gradient">
+                        <div class="gradient-bar"></div>
+                        <div class="gradient-labels">
+                            <span>Critical</span>
+                            <span>Poor</span>
+                            <span>Fair</span>
+                            <span>Good</span>
+                            <span>Excellent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OSM Comparison Legend (hidden by default) -->
+                <div class="map-legend glass-panel-elevated" id="osm-legend" style="display: none;">
+                    <div class="legend-title">OSM Comparison</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #10b981;"></div>
+                            <span>Match (Both)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <span>Tile2Net only</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f97316;"></div>
+                            <span>OSM only (dashed)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- City Data Legend (hidden by default) -->
+                <div class="map-legend glass-panel-elevated" id="city-data-legend" style="display: none;">
+                    <div class="legend-title">City GIS Comparison</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <span>Tile2Net Network</span>
+                        </div>
+                    </div>
+                    <div class="legend-title" style="margin-top: 12px;">City Data Layers</div>
+                    <div class="city-data-toggles" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                        <button class="city-layer-toggle active" id="toggle-city-sidewalks" data-layer="sidewalks">
+                            <div class="legend-color" style="background: #a855f7; width: 16px; height: 16px; border-radius: 3px;"></div>
+                            <span>Sidewalks</span>
+                            <svg class="toggle-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </button>
+                        <button class="city-layer-toggle active" id="toggle-city-buildings" data-layer="buildings">
+                            <div class="legend-color" style="background: #f59e0b; width: 16px; height: 16px; border-radius: 3px;"></div>
+                            <span>Buildings</span>
+                            <svg class="toggle-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Flicker Control (shown when flicker is active) -->
+                <div class="flicker-control glass-panel" id="flicker-control" style="display: block;">
+                    <div class="flicker-header">
+                        <span class="flicker-title">Flicker Comparison</span>
+                        <span class="flicker-label base" id="flicker-current-label">Plain Map</span>
+                    </div>
+                    <div class="flicker-speed-control">
+                        <label>Speed:</label>
+                        <input type="range" id="flicker-speed" min="200" max="1500" value="1000" step="100">
+                        <span id="flicker-speed-label">1000ms</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Stats -->
+            <div class="stats-bar glass-panel">
+                <div class="stat-item">
+                    <span class="stat-label">Network Segments</span>
+                    <span class="stat-value" id="stat-segments">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Length</span>
+                    <span class="stat-value" id="stat-length">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Connectivity</span>
+                    <span class="stat-value" id="stat-connectivity">--</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">OSM Match</span>
+                    <span class="stat-value" id="stat-osm-match">--</span>
+                </div>
+            </div>
+
+            <!-- Analysis Sidebar -->
+            <div class="analysis-sidebar glass-panel" id="analysis-sidebar">
+                <!-- Metrics Dashboard -->
+                <div class="metrics-dashboard" id="metrics-dashboard">
+                    <div class="metrics-header">
+                        <h3>Network Analysis</h3>
+                        <p class="metrics-subtitle">Click a metric to highlight on map</p>
+                    </div>
+                    <div class="metrics-loading">
+                        <div class="loading-spinner-small"></div>
+                        <span>Analyzing network...</span>
+                    </div>
+                </div>
+
+                <!-- Visual Mode Toggle -->
+                <div class="visual-mode-section">
+                    <span class="section-label">Visualization Mode</span>
+                    <div class="visual-mode-toggle">
+                        <button class="visual-mode-btn active" data-mode="quality">Quality</button>
+                        <button class="visual-mode-btn" data-mode="centrality">Centrality</button>
+                        <button class="visual-mode-btn" data-mode="problems">Problems</button>
+                    </div>
+                </div>
+
+                <!-- Problems Panel -->
+                <div class="problems-panel" id="problems-panel">
+                    <div class="problems-header">
+                        <h3>Flagged Issues</h3>
+                        <span class="problems-count">--</span>
+                    </div>
+                    <div class="problems-loading">
+                        <div class="loading-spinner-small"></div>
+                        <span>Detecting issues...</span>
+                    </div>
+                </div>
+
+                <!-- Toggle Problem Flags -->
+                <div class="toggle-section">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="toggle-problem-flags" checked>
+                        <span class="toggle-slider"></span>
+                        <span>Show Problem Flags</span>
+                    </label>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading Pedestrian Network Inspector...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-panel-elevated">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="modal-close" id="settings-close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Map Settings -->
+                <div class="settings-section">
+                    <h3>Map Settings</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="setting-map-style">Map Style</label>
+                            <select id="setting-map-style" class="setting-select">
+                                <option value="mapbox://styles/mapbox/satellite-streets-v12">Satellite Streets</option>
+                                <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+                                <option value="mapbox://styles/mapbox/streets-v12">Streets</option>
+                                <option value="mapbox://styles/mapbox/dark-v11">Dark</option>
+                                <option value="mapbox://styles/mapbox/light-v11">Light</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-sync-panels">Sync All Panels</label>
+                            <input type="checkbox" id="setting-sync-panels" class="setting-checkbox" checked>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segmentation Settings -->
+                <div class="settings-section">
+                    <h3>Segmentation Display</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="setting-seg-opacity">Default Overlay Opacity</label>
+                            <input type="range" id="setting-seg-opacity" class="setting-range" min="0" max="100" value="70">
+                            <span class="setting-value" id="setting-seg-opacity-value">70%</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-error-highlight">Error Highlight Intensity</label>
+                            <input type="range" id="setting-error-highlight" class="setting-range" min="50" max="255" value="150">
+                            <span class="setting-value" id="setting-error-highlight-value">150</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-show-crosswalks">Show Crosswalks</label>
+                            <input type="checkbox" id="setting-show-crosswalks" class="setting-checkbox" checked>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Settings -->
+                <div class="settings-section">
+                    <h3>Network Display</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="setting-edge-width">Edge Width</label>
+                            <input type="range" id="setting-edge-width" class="setting-range" min="1" max="10" value="4">
+                            <span class="setting-value" id="setting-edge-width-value">4px</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-node-size">Node Size</label>
+                            <input type="range" id="setting-node-size" class="setting-range" min="3" max="15" value="6">
+                            <span class="setting-value" id="setting-node-size-value">6px</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-flicker-speed">Flicker Speed (ms)</label>
+                            <input type="range" id="setting-flicker-speed" class="setting-range" min="200" max="2000" value="1000" step="100">
+                            <span class="setting-value" id="setting-flicker-speed-value">1000ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Settings -->
+                <div class="settings-section">
+                    <h3>Analysis Thresholds</h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="setting-short-stub">Short Stub Threshold (m)</label>
+                            <input type="number" id="setting-short-stub" class="setting-number" min="1" max="20" value="5">
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-long-link">Long Link Threshold (m)</label>
+                            <input type="number" id="setting-long-link" class="setting-number" min="50" max="500" value="200">
+                        </div>
+                        <div class="setting-item">
+                            <label for="setting-sharp-angle">Sharp Angle Threshold (deg)</label>
+                            <input type="number" id="setting-sharp-angle" class="setting-number" min="10" max="60" value="30">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Source Info -->
+                <div class="settings-section">
+                    <h3>Data Source</h3>
+                    <div class="data-source-info" id="data-source-info">
+                        <div class="source-item">
+                            <span class="source-label">Segmentation Data:</span>
+                            <span class="source-value" id="source-seg-type">Synthetic (Demo)</span>
+                        </div>
+                        <div class="source-item">
+                            <span class="source-label">Network Data:</span>
+                            <span class="source-value" id="source-network-type">pedestrian-network.geojson</span>
+                        </div>
+                        <div class="source-item">
+                            <span class="source-label">Ground Truth:</span>
+                            <span class="source-value" id="source-gt-type">OSM + City GIS</span>
+                        </div>
+                    </div>
+                    <button class="btn-modern" id="btn-reload-data" style="margin-top: 12px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6"/>
+                            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                        </svg>
+                        Reload Data
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modern btn-secondary" id="settings-reset">Reset to Defaults</button>
+                <button class="btn-modern btn-primary" id="settings-apply">Apply Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Button (Fixed Position) -->
+    <button class="settings-fab" id="settings-fab" title="Open Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+    </button>
+
+    <!-- Export Button (Fixed Position) -->
+    <button class="export-fab" id="export-fab" title="Export Data">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+    </button>
+
+    <!-- Export Menu (Dropdown) -->
+    <div class="export-menu" id="export-menu" style="display: none;">
+        <div class="export-menu-header">Export Options</div>
+        <button class="export-menu-item" data-export="network-geojson">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            Network (GeoJSON)
+        </button>
+        <button class="export-menu-item" data-export="network-csv">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="3" y1="9" x2="21" y2="9"/>
+                <line x1="3" y1="15" x2="21" y2="15"/>
+                <line x1="9" y1="3" x2="9" y2="21"/>
+            </svg>
+            Network (CSV)
+        </button>
+        <button class="export-menu-item" data-export="errors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            Error Analysis (JSON)
+        </button>
+        <button class="export-menu-item" data-export="report">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+            </svg>
+            Quality Report (HTML)
+        </button>
+        <div class="export-menu-divider"></div>
+        <button class="export-menu-item" data-export="screenshot-seg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            Screenshot (Segmentation)
+        </button>
+        <button class="export-menu-item" data-export="screenshot-net">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            Screenshot (Network)
+        </button>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/state-manager.js"></script>
+    <script src="js/settings-manager.js"></script>
+    <script src="js/export-manager.js"></script>
+    <script src="js/magnification-lens.js"></script>
+    <script src="js/quality-scorecard.js"></script>
+    <script src="js/network-analyzer.js"></script>
+    <script src="js/sync-controller.js"></script>
+    <script src="js/modern-deck-network-panel.js"></script>
+    <script src="js/modern-deck-segmentation-panel.js"></script>
+
+    <!-- Tile2Net Integration (CRITICAL: Real segmentation data) -->
+    <script src="js/tile2net-data-loader.js"></script>
+    <script src="js/viewport-segmentation-overlay.js"></script>
+    <script src="js/pixel-inspector.js"></script>
+
+    <script src="js/modern-app.js"></script>
+
+</body>
+</html>

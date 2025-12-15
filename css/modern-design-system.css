@@ -1,0 +1,537 @@
+/**
+ * Modern Design System - Dark Mode with Glassmorphism
+ * Inspired by: Uber, Figma, Linear, Vercel
+ * Built for: Futuristic, smooth, premium feel
+ */
+
+:root {
+  /* ========================================
+     DARK MODE COLOR PALETTE
+     ======================================== */
+
+  /* Background Colors - Luxury Dark Theme */
+  --color-bg-primary: #0d0d12;           /* Deep charcoal - main background */
+  --color-bg-secondary: #15151d;         /* Rich dark - panels */
+  --color-bg-tertiary: #1c1c28;          /* Card backgrounds */
+  --color-bg-elevated: #242433;          /* Elevated elements */
+
+  /* Glassmorphism - Subtle and luxurious */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-hover: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+
+  /* Text Colors - High contrast for readability */
+  --color-text-primary: #f8f9fa;         /* Pure white */
+  --color-text-secondary: #b4b8c0;       /* Soft gray */
+  --color-text-tertiary: #6e7179;        /* Darker gray */
+  --color-text-accent: #d4af37;          /* Gold accent */
+
+  /* Error Classification Colors (Luxury palette) */
+  --color-false-positive: #5b9dff;       /* Sky blue */
+  --color-false-negative: #ffb347;       /* Warm amber */
+  --color-true-positive: #2dd4bf;        /* Teal */
+  --color-confidence-mismatch: #ff6b6b;  /* Coral red */
+
+  /* Quality Scale (Sophisticated tones) */
+  --color-excellent: #2dd4bf;            /* Teal */
+  --color-good: #60a5fa;                 /* Sky blue */
+  --color-fair: #fbbf24;                 /* Gold */
+  --color-poor: #fb923c;                 /* Amber */
+  --color-critical: #f87171;             /* Coral */
+
+  /* Segmentation Class Colors (Prediction Mode) */
+  --color-class-road: #4caf50;           /* Green - roads */
+  --color-class-sidewalk: #2196f3;       /* Blue - sidewalks */
+  --color-class-crosswalk: #f44336;      /* Red - crosswalks */
+  --color-class-background: transparent;
+
+  /* Segmentation Class Colors (Ground Truth Mode) */
+  --color-gt-road: #ff9800;              /* Orange - GT roads */
+  --color-gt-sidewalk: #9c27b0;          /* Purple - GT sidewalks */
+  --color-gt-crosswalk: #e91e63;         /* Magenta - GT crosswalks */
+
+  /* Network Comparison Colors */
+  --color-network-tile2net: #3b82f6;     /* Blue - Tile2Net network */
+  --color-network-osm: #f97316;          /* Orange - OSM network */
+  --color-network-match: #10b981;        /* Green - matching segments */
+
+  /* Accent Colors - Gold and platinum theme */
+  --color-accent-primary: #d4af37;       /* Rich gold */
+  --color-accent-secondary: #c0c0c0;     /* Platinum silver */
+  --color-accent-glow: rgba(212, 175, 55, 0.25);
+
+  /* Border Colors */
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-medium: rgba(255, 255, 255, 0.1);
+  --color-border-strong: rgba(255, 255, 255, 0.2);
+
+  /* ========================================
+     GRADIENTS
+     ======================================== */
+
+  --gradient-primary: linear-gradient(135deg, #d4af37 0%, #c0c0c0 100%);
+  --gradient-secondary: linear-gradient(135deg, #c0c0c0 0%, #d4af37 100%);
+  --gradient-mesh:
+    radial-gradient(at 40% 20%, rgba(212, 175, 55, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(192, 192, 192, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(212, 175, 55, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(192, 192, 192, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(212, 175, 55, 0.06) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(192, 192, 192, 0.08) 0px, transparent 50%);
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px var(--color-accent-glow);
+  --shadow-glow-strong: 0 0 40px var(--color-accent-glow);
+
+  /* ========================================
+     BACKDROP FILTERS (Glassmorphism)
+     ======================================== */
+
+  --blur-sm: blur(4px);
+  --blur-md: blur(8px);
+  --blur-lg: blur(12px);
+  --blur-xl: blur(16px);
+
+  /* ========================================
+     ANIMATIONS
+     ======================================== */
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ========================================
+     SPACING (Same as before)
+     ======================================== */
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ========================================
+     TYPOGRAPHY (Enhanced)
+     ======================================== */
+
+  --font-primary: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-monospace: 'JetBrains Mono', 'Consolas', monospace;
+  --font-display: 'Inter', sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 48px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* ========================================
+     BORDER RADIUS (Enhanced)
+     ======================================== */
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ========================================
+     Z-INDEX SCALE
+     ======================================== */
+
+  --z-base: 0;
+  --z-panel: 10;
+  --z-overlay: 100;
+  --z-dropdown: 200;
+  --z-modal: 300;
+  --z-tooltip: 400;
+  --z-notification: 500;
+}
+
+/* ========================================
+   GLOBAL RESETS & BASE STYLES
+   ======================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  background-image: var(--gradient-mesh);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* ========================================
+   GLASSMORPHISM COMPONENTS
+   ======================================== */
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+}
+
+.glass-panel:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+.glass-panel-elevated {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: var(--blur-xl);
+  -webkit-backdrop-filter: var(--blur-xl);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ========================================
+   GLOW EFFECTS
+   ======================================== */
+
+.glow-on-hover {
+  transition: all var(--transition-base);
+}
+
+.glow-on-hover:hover {
+  box-shadow: var(--shadow-glow);
+  transform: scale(1.02);
+}
+
+.glow-accent {
+  box-shadow:
+    0 0 20px rgba(212, 175, 55, 0.3),
+    0 0 40px rgba(212, 175, 55, 0.1);
+}
+
+/* ========================================
+   ANIMATED GRADIENTS
+   ======================================== */
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(
+    135deg,
+    #d4af37 0%,
+    #c0c0c0 25%,
+    #d4af37 50%,
+    #c0c0c0 75%,
+    #d4af37 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* ========================================
+   SMOOTH TRANSITIONS
+   ======================================== */
+
+.transition-smooth {
+  transition: all var(--transition-base);
+}
+
+.transition-bounce {
+  transition: all var(--transition-bounce);
+}
+
+/* ========================================
+   LOADING ANIMATIONS
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s var(--transition-base) backwards;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s var(--transition-base) backwards;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ========================================
+   BUTTON STYLES (Modern)
+   ======================================== */
+
+.btn-modern {
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+}
+
+.btn-modern:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-modern:active {
+  transform: translateY(0);
+}
+
+.btn-modern.active {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ========================================
+   CARD STYLES
+   ======================================== */
+
+.card-modern {
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition: all var(--transition-base);
+}
+
+.card-modern:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ========================================
+   INPUT STYLES
+   ======================================== */
+
+.input-modern {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  transition: all var(--transition-base);
+}
+
+.input-modern:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ========================================
+   ACCESSIBILITY (Enhanced for dark mode)
+   ======================================== */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-accent-primary);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+  left: var(--space-sm);
+  box-shadow: var(--shadow-glow);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animated-gradient {
+    animation: none;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.text-gradient {
+  background: linear-gradient(135deg, #d4af37 0%, #c0c0c0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-glow {
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.backdrop-blur {
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ========================================
+   RESPONSIVE UTILITIES
+   ======================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --text-xs: 11px;
+    --text-sm: 13px;
+    --text-base: 15px;
+    --text-lg: 17px;
+    --text-xl: 22px;
+    --text-2xl: 28px;
+  }
+
+  .glass-panel {
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+  }
+}

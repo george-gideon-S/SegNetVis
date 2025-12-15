@@ -1,0 +1,320 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9850, 40.7485],
+          [-73.9849, 40.7485],
+          [-73.9849, 40.7486],
+          [-73.9850, 40.7486],
+          [-73.9850, 40.7485]
+        ]]
+      },
+      "properties": {
+        "id": "err_001",
+        "errorType": "false_positive",
+        "confidence": 0.72,
+        "area": 48.3,
+        "severity": "medium",
+        "description": "Model predicted sidewalk in tree shadow area"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9845, 40.7488],
+          [-73.9844, 40.7488],
+          [-73.9844, 40.7489],
+          [-73.9845, 40.7489],
+          [-73.9845, 40.7488]
+        ]]
+      },
+      "properties": {
+        "id": "err_002",
+        "errorType": "false_negative",
+        "confidence": 0.35,
+        "area": 52.1,
+        "severity": "high",
+        "description": "Sidewalk missed due to vegetation occlusion"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9840, 40.7482],
+          [-73.9839, 40.7482],
+          [-73.9839, 40.7483],
+          [-73.9840, 40.7483],
+          [-73.9840, 40.7482]
+        ]]
+      },
+      "properties": {
+        "id": "err_003",
+        "errorType": "false_positive",
+        "confidence": 0.89,
+        "area": 38.7,
+        "severity": "low",
+        "description": "Sidewalk detected on building shadow"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9835, 40.7486],
+          [-73.9834, 40.7486],
+          [-73.9834, 40.7487],
+          [-73.9835, 40.7487],
+          [-73.9835, 40.7486]
+        ]]
+      },
+      "properties": {
+        "id": "err_004",
+        "errorType": "confidence_mismatch",
+        "confidence": 0.95,
+        "area": 61.2,
+        "severity": "critical",
+        "description": "High confidence prediction but incorrect - road marked as sidewalk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9830, 40.7479],
+          [-73.9829, 40.7479],
+          [-73.9829, 40.7480],
+          [-73.9830, 40.7480],
+          [-73.9830, 40.7479]
+        ]]
+      },
+      "properties": {
+        "id": "err_005",
+        "errorType": "false_negative",
+        "confidence": 0.42,
+        "area": 44.6,
+        "severity": "medium",
+        "description": "Sidewalk segment not detected"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9855, 40.7492],
+          [-73.9854, 40.7492],
+          [-73.9854, 40.7493],
+          [-73.9855, 40.7493],
+          [-73.9855, 40.7492]
+        ]]
+      },
+      "properties": {
+        "id": "err_006",
+        "errorType": "false_positive",
+        "confidence": 0.68,
+        "area": 55.8,
+        "severity": "medium",
+        "description": "Parking area misclassified as sidewalk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9848, 40.7481],
+          [-73.9847, 40.7481],
+          [-73.9847, 40.7482],
+          [-73.9848, 40.7482],
+          [-73.9848, 40.7481]
+        ]]
+      },
+      "properties": {
+        "id": "err_007",
+        "errorType": "true_positive",
+        "confidence": 0.96,
+        "area": 72.3,
+        "severity": "low",
+        "description": "Correctly identified sidewalk segment"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9843, 40.7494],
+          [-73.9842, 40.7494],
+          [-73.9842, 40.7495],
+          [-73.9843, 40.7495],
+          [-73.9843, 40.7494]
+        ]]
+      },
+      "properties": {
+        "id": "err_008",
+        "errorType": "false_negative",
+        "confidence": 0.28,
+        "area": 49.1,
+        "severity": "high",
+        "description": "Sidewalk completely missed in heavy shadow"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9838, 40.7480],
+          [-73.9837, 40.7480],
+          [-73.9837, 40.7481],
+          [-73.9838, 40.7481],
+          [-73.9838, 40.7480]
+        ]]
+      },
+      "properties": {
+        "id": "err_009",
+        "errorType": "false_positive",
+        "confidence": 0.54,
+        "area": 41.5,
+        "severity": "medium",
+        "description": "Bike lane misclassified as sidewalk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9833, 40.7491],
+          [-73.9832, 40.7491],
+          [-73.9832, 40.7492],
+          [-73.9833, 40.7492],
+          [-73.9833, 40.7491]
+        ]]
+      },
+      "properties": {
+        "id": "err_010",
+        "errorType": "true_positive",
+        "confidence": 0.91,
+        "area": 68.9,
+        "severity": "low",
+        "description": "Correctly identified sidewalk with high confidence"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9851, 40.7483],
+          [-73.9850, 40.7483],
+          [-73.9850, 40.7484],
+          [-73.9851, 40.7484],
+          [-73.9851, 40.7483]
+        ]]
+      },
+      "properties": {
+        "id": "err_011",
+        "errorType": "false_positive",
+        "confidence": 0.77,
+        "area": 36.4,
+        "severity": "low",
+        "description": "Building entrance area marked as sidewalk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9846, 40.7495],
+          [-73.9845, 40.7495],
+          [-73.9845, 40.7496],
+          [-73.9846, 40.7496],
+          [-73.9846, 40.7495]
+        ]]
+      },
+      "properties": {
+        "id": "err_012",
+        "errorType": "confidence_mismatch",
+        "confidence": 0.92,
+        "area": 58.7,
+        "severity": "critical",
+        "description": "High confidence but wrong - street marked as sidewalk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9841, 40.7489],
+          [-73.9840, 40.7489],
+          [-73.9840, 40.7490],
+          [-73.9841, 40.7490],
+          [-73.9841, 40.7489]
+        ]]
+      },
+      "properties": {
+        "id": "err_013",
+        "errorType": "false_negative",
+        "confidence": 0.38,
+        "area": 47.2,
+        "severity": "medium",
+        "description": "Sidewalk segment not detected due to partial occlusion"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9836, 40.7493],
+          [-73.9835, 40.7493],
+          [-73.9835, 40.7494],
+          [-73.9836, 40.7494],
+          [-73.9836, 40.7493]
+        ]]
+      },
+      "properties": {
+        "id": "err_014",
+        "errorType": "true_positive",
+        "confidence": 0.88,
+        "area": 65.3,
+        "severity": "low",
+        "description": "Correctly detected crosswalk"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-73.9831, 40.7485],
+          [-73.9830, 40.7485],
+          [-73.9830, 40.7486],
+          [-73.9831, 40.7486],
+          [-73.9831, 40.7485]
+        ]]
+      },
+      "properties": {
+        "id": "err_015",
+        "errorType": "false_positive",
+        "confidence": 0.61,
+        "area": 43.8,
+        "severity": "medium",
+        "description": "Plaza area misidentified as sidewalk"
+      }
+    }
+  ]
+}

@@ -1,0 +1,291 @@
+/**
+ * Ring-Style Magnification Lens Styles
+ *
+ * A circular ring overlay that shows local layer content inside
+ * while the base map outside remains in Original mode.
+ */
+
+/* ========================================
+   RING LENS CONTAINER
+   ======================================== */
+
+.ring-lens {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10000;
+  transition: opacity 0.15s ease;
+}
+
+.ring-lens.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ring-lens.pinned {
+  pointer-events: auto;
+  cursor: move;
+}
+
+/* ========================================
+   RING CANVAS
+   ======================================== */
+
+.ring-lens-canvas {
+  display: block;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+}
+
+/* ========================================
+   RING CONTROLS - Mode buttons around the ring
+   ======================================== */
+
+.ring-lens-controls {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.ring-mode-buttons {
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.ring-mode-btn {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  pointer-events: auto;
+}
+
+.ring-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--mode-color, rgba(255, 255, 255, 0.3));
+  color: white;
+}
+
+.ring-mode-btn.active {
+  background: var(--mode-color, #8b5cf6);
+  border-color: var(--mode-color, #8b5cf6);
+  color: white;
+  box-shadow: 0 0 12px var(--mode-color, rgba(139, 92, 246, 0.5));
+}
+
+/* ========================================
+   CLOSE BUTTON
+   ======================================== */
+
+.ring-lens-close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ring-lens-close:hover {
+  background: #ef4444;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+/* ========================================
+   RESIZE CONTROLS - +/- buttons on the ring
+   ======================================== */
+
+.ring-lens-resize {
+  position: absolute;
+  top: 50%;
+  right: -45px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: auto;
+}
+
+.ring-resize-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ring-resize-btn:hover {
+  background: rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.6);
+  transform: scale(1.1);
+}
+
+.ring-resize-btn:active {
+  transform: scale(0.95);
+  background: rgba(139, 92, 246, 0.5);
+}
+
+.ring-resize-plus {
+  color: #4ade80;
+}
+
+.ring-resize-minus {
+  color: #f97316;
+}
+
+/* ========================================
+   COORDINATES DISPLAY
+   ======================================== */
+
+.ring-lens-coords {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 3px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ========================================
+   TOGGLE BUTTON (in header controls)
+   ======================================== */
+
+.lens-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lens-toggle-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.lens-toggle-btn.active {
+  background: rgba(139, 92, 246, 0.3);
+  border-color: #8b5cf6;
+  color: #c4b5fd;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.lens-toggle-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ========================================
+   DISABLED STATE for global mode buttons
+   ======================================== */
+
+.seg-mode-btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.seg-mode-btn.disabled::after {
+  content: '🔒';
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes ring-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ring-lens:not(.hidden) {
+  animation: ring-appear 0.2s ease-out;
+}
+
+@keyframes ring-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4));
+  }
+}
+
+.ring-lens.pinned .ring-lens-canvas {
+  animation: ring-pulse 2s ease-in-out infinite;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .ring-mode-buttons {
+    padding: 4px 6px;
+  }
+
+  .ring-mode-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .ring-lens-coords {
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "description": "Tile index for Tile2Net segmentation masks",
+  "instructions": "Replace this with your actual tile data. Each tile should have prediction and ground truth PNG images.",
+  "tileSize": 256,
+  "format": "png",
+  "colorEncoding": {
+    "background": [0, 0, 0],
+    "road": [0, 255, 0],
+    "sidewalk": [0, 0, 255],
+    "crosswalk": [255, 0, 0]
+  },
+  "tiles": [
+    {
+      "id": "tile_0_0",
+      "row": 0,
+      "col": 0,
+      "bounds": [[40.7469, -73.9872], [40.7499, -73.9842]],
+      "center": [40.7484, -73.9857],
+      "segmentationPath": "data/tiles/predictions/tile_0_0.png",
+      "groundTruthPath": "data/tiles/ground_truth/tile_0_0.png"
+    },
+    {
+      "id": "tile_0_1",
+      "row": 0,
+      "col": 1,
+      "bounds": [[40.7469, -73.9842], [40.7499, -73.9812]],
+      "center": [40.7484, -73.9827],
+      "segmentationPath": "data/tiles/predictions/tile_0_1.png",
+      "groundTruthPath": "data/tiles/ground_truth/tile_0_1.png"
+    },
+    {
+      "id": "tile_1_0",
+      "row": 1,
+      "col": 0,
+      "bounds": [[40.7499, -73.9872], [40.7529, -73.9842]],
+      "center": [40.7514, -73.9857],
+      "segmentationPath": "data/tiles/predictions/tile_1_0.png",
+      "groundTruthPath": "data/tiles/ground_truth/tile_1_0.png"
+    },
+    {
+      "id": "tile_1_1",
+      "row": 1,
+      "col": 1,
+      "bounds": [[40.7499, -73.9842], [40.7529, -73.9812]],
+      "center": [40.7514, -73.9827],
+      "segmentationPath": "data/tiles/predictions/tile_1_1.png",
+      "groundTruthPath": "data/tiles/ground_truth/tile_1_1.png"
+    }
+  ]
+}
