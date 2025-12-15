@@ -6,7 +6,7 @@
 class ModernPedestrianNetworkInspector {
   constructor() {
     // Mapbox token
-    this.mapboxToken = 'pk.eyJ1Ijoiam9obmRvZXNhbGUiLCJhIjoiY21pdm13MDgzMWkxYzNncTI5M3c2NGdqeCJ9.607nSwpB6G7Iazo5vJfmgQ';
+    this.mapboxToken = '## Paste your TOKEN here!';
 
     // Maps
     this.segmentationMap = null;  // Left map - segmentation overlay
