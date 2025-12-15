@@ -96,8 +96,8 @@ The Network Quality Inspector panel provides graph-level topology analysis of th
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/george-gideon-S/pedestrian-network-inspector.git
-   cd pedestrian-network-inspector
+   git clone https://github.com/george-gideon-S/SegNetVis.git
+   cd SegNetVis
    ```
 2. **Add your Mapbox token**
 
